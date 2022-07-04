@@ -2,11 +2,11 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
 import 'package:notesapp/pages/home.dart';
 import 'package:notesapp/pages/home/lista_nota.dart';
-
 
 class LoginPage extends StatelessWidget {
   @override
@@ -18,6 +18,7 @@ class LoginPage extends StatelessWidget {
   }
 }
 
+
 class _LoginScreen extends StatefulWidget {
   _LoginScreen({Key? key}) : super(key: key);
 
@@ -26,11 +27,20 @@ class _LoginScreen extends StatefulWidget {
 }
 
 class __LoginScreenState extends State<_LoginScreen> {
+
+
+  final storage = new FlutterSecureStorage();
+
+
   final TextEditingController _controllerEmail = TextEditingController();
 
   final TextEditingController _controllerPassword = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  _savelocal()async{
+    await storage.write(key: 'email', value: _controllerEmail.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +108,9 @@ class __LoginScreenState extends State<_LoginScreen> {
                     // final message = 'dfssdf';
                     if (message == 'true') {
                       // if (message!.contains('provider')) {
+                      
+
+                      _savelocal();
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           //builder: (context) => ListaNota(),
