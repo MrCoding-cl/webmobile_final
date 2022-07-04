@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
+import 'package:internet_popup/internet_popup.dart';
 import 'package:notesapp/pages/home.dart';
 import 'package:notesapp/pages/home/lista_nota.dart';
 
@@ -27,8 +28,11 @@ class _LoginScreen extends StatefulWidget {
 }
 
 class __LoginScreenState extends State<_LoginScreen> {
-
-
+  void initState() {
+    super.initState();
+    InternetPopup().initialize(context: context);
+  }
+  
   final storage = new FlutterSecureStorage();
 
 
@@ -57,9 +61,7 @@ class __LoginScreenState extends State<_LoginScreen> {
                   style: TextStyle(fontSize: 30),
                 ),
                 const SizedBox(height: 20),
-                Image(
-                    image: NetworkImage(
-                        'https://uft.cl/images/la_universidad/imagen-corporativa/Institucional/Logo_FINIS_institucional.png')),
+                Image.asset('assets/logo.png'),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: 44,

@@ -1,5 +1,11 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:internet_popup/internet_popup.dart';
 import 'package:notesapp/pages/constant/rutas.dart';
+import 'package:notesapp/pages/home.dart';
 import 'package:notesapp/sqlite/model/nota.dart';
 import 'package:notesapp/sqlite/sqlite_delete.dart';
 import 'package:notesapp/sqlite/sqlite_helper.dart';
@@ -19,11 +25,28 @@ class ListaNota extends StatefulWidget {
 
 
 class _ListaNotaState extends State<ListaNota> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   @override
   void initState() {
     super.initState();
     _loadProviderData();
+    _connectivitySubscription=Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+    if (result == ConnectivityResult.none) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(msg:'No hay internet');
   }
+  });
+  }
+  @override
+    dispose() {
+      super.dispose();
+
+       _connectivitySubscription.cancel();
+    }
+
+
 
   Future<void> _loadProviderData() async {
     final SQliteQuery sqliteQuery =
@@ -40,6 +63,20 @@ class _ListaNotaState extends State<ListaNota> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          //builder: (context) => ListaNota(),
+                          builder: (context) => HomePage(),
+                        ),
+                      );
+          },
+          child: Icon(
+            Icons.home,
+            color: Colors.white,
+        ),
+        ),
         automaticallyImplyLeading: false,
         title: const Center(
           child: Text('Lista de notas'),
