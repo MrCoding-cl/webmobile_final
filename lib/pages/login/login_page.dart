@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:email_validator/email_validator.dart';
 import 'package:notesapp/pages/home.dart';
 import 'package:notesapp/pages/home/lista_nota.dart';
+
 
 class LoginPage extends StatelessWidget {
   @override

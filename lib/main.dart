@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           Rutas.anadirNota: (BuildContext context) => const AnadirNota(),
           Rutas.editarNota: (BuildContext context) => const EditarNota(),
           Rutas.login: (BuildContext context) => LoginPage(),
-          Rutas.register: (BuildContext context) => RegisterPage(),
+          Rutas.register: (BuildContext context) => const RegisterPage(),
         },
       ),
     );

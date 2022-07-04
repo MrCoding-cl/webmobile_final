@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notesapp/sqlite/model/nota.dart';
 import 'package:notesapp/sqlite/sqlite_insert.dart';
-import 'package:image_picker/image_picker.dart';
 
 
 
