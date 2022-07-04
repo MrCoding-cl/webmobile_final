@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:animated_image_list/AnimatedImageList.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloudinary_sdk/cloudinary_sdk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../models/image.dart';
 
 
 //generate random name
@@ -19,7 +22,7 @@ String randomName() {
 }
 
 Future<http.Response>postImageUrl(String username,String imageUrl){
-  return http.post(Uri.parse('https://bc93-2803-c180-2101-e1e0-a435-7f86-1690-1565.sa.ngrok.io/upload'),
+  return http.post(Uri.parse('https://webmobilebackend.herokuapp.com/upload'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -125,6 +128,39 @@ class _ListaImagenesState extends State<ListaImagenes> {
     }
   }
 
+  Imagen parseImagen(String responseBody){
+
+    Imagen imagen = Imagen.fromJson(json.decode(responseBody));
+
+    return imagen;
+
+  }
+
+
+  
+
+
+  //fetch list of string
+  Future<Imagen> fetchImages() async {
+    final storage = new FlutterSecureStorage();
+    String? value = await storage.read(key: 'email');
+  
+   final response= await http.post(Uri.parse('https://webmobilebackend.herokuapp.com/getimages'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: json.encode({
+        'username': value,
+      }));
+
+    return parseImagen(response.body);
+
+
+
+
+
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -141,7 +177,31 @@ class _ListaImagenesState extends State<ListaImagenes> {
         child: const Icon(Icons.image),
       ),
     
-      body: ,
+      body:FutureBuilder(
+        future: fetchImages(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Imagen imagen = snapshot.data as Imagen;
+            List<String> images = imagen.getImages();
+            return AnimatedImageList(
+              images: images,
+              builder: (context,index,progress){
+                return Positioned.directional(textDirection: TextDirection.ltr, child: 
+                Opacity(
+                  opacity: progress,
+                  child: Image.network(images[index]),
+                
+                )
+                
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        },
+      ),
     );
   }
   
